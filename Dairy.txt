@@ -6,7 +6,7 @@ basic features
 5. Summary of Expenses
 
 Table Expenses
-| Date       | Category | Amount | Description |
+| Date(Optional) | Category | Amount | Description |
 
 Controllers
 Add ExpenseController
