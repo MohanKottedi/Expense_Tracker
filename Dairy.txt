@@ -1,0 +1,29 @@
+basic features
+1. Adding Expenses
+    2. Viewing Expenses
+    3. Editing Expenses
+    4. Deleting Expenses
+5. Summary of Expenses
+
+Table Expenses
+| Date       | Category | Amount | Description |
+
+Controllers
+Add ExpenseController
+- Function: addExpense()
+- Input: Date, Category, Amount, Description
+- Output: Success/Failure message
+- Function: viewExpenses()
+- Input: Filter (optional)
+- Output: List of Expenses
+- Function: editExpense()
+- Input: Expense ID, Updated Details
+- Output: Success/Failure message
+- Function: deleteExpense()
+- Input: Expense ID
+- Output: Success/Failure message
+
+Add SummaryController
+- Function: getSummary()
+- Input: Date Range (optional)
+- Output: Total Expenses, Category-wise Breakdown
