@@ -23,27 +23,24 @@ public class ExpenseController {
         Optional<Expenses> result = expenseService.addExpense(addExpenseReq);
         return ResponseEntity.ok(result.orElse(null));
     }
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Expenses> getExpense(@PathVariable  Long id) throws Exception {
         Optional<Expenses> result = expenseService.getExpense(id);
         return ResponseEntity.ok(result.get());
     }
-    @GetMapping("/get")
+    @GetMapping("/")
     public ResponseEntity<List<Expenses>> getAllExpense() throws Exception {
         List<Expenses> result = expenseService.getAllExpense();
         return ResponseEntity.ok(result);
     }
-    @GetMapping("/view")
-    public ResponseEntity<ExpenseResponse> viewExpense(){
-        return ResponseEntity.ok(null);
-    }
+
     @PostMapping("/edit")
     public ResponseEntity<Expenses> editExpense(@RequestBody EditExpenseReq editExpenseReq) throws Exception {
         Optional<Expenses> result = expenseService.editExpense(editExpenseReq);
 
         return ResponseEntity.ok(result.get());
     }
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteExpense(@PathVariable Long id) throws Exception {
         expenseService.deleteExpense(id);
         return ResponseEntity.ok(null);
