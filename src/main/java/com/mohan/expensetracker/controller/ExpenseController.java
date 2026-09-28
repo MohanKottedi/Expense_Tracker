@@ -8,6 +8,7 @@ import com.mohan.expensetracker.service.ExpenseService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,20 +23,29 @@ public class ExpenseController {
         Optional<Expenses> result = expenseService.addExpense(addExpenseReq);
         return ResponseEntity.ok(result.orElse(null));
     }
+    @GetMapping("/get/{id}")
+    public ResponseEntity<Expenses> getExpense(@PathVariable  Long id) throws Exception {
+        Optional<Expenses> result = expenseService.getExpense(id);
+        return ResponseEntity.ok(result.get());
+    }
     @GetMapping("/get")
-    public ResponseEntity<ExpenseResponse> getExpense(){
-        return ResponseEntity.ok(null);
+    public ResponseEntity<List<Expenses>> getAllExpense() throws Exception {
+        List<Expenses> result = expenseService.getAllExpense();
+        return ResponseEntity.ok(result);
     }
     @GetMapping("/view")
     public ResponseEntity<ExpenseResponse> viewExpense(){
         return ResponseEntity.ok(null);
     }
     @PostMapping("/edit")
-    public ResponseEntity<ExpenseResponse> editExpense(@RequestBody EditExpenseReq editExpenseReq){
-        return ResponseEntity.ok(null);
+    public ResponseEntity<Expenses> editExpense(@RequestBody EditExpenseReq editExpenseReq) throws Exception {
+        Optional<Expenses> result = expenseService.editExpense(editExpenseReq);
+
+        return ResponseEntity.ok(result.get());
     }
-    @PostMapping("/delete/{id}")
-    public ResponseEntity<ExpenseResponse> deleteExpense(@PathVariable Long id){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteExpense(@PathVariable Long id) throws Exception {
+        expenseService.deleteExpense(id);
         return ResponseEntity.ok(null);
     }
 }
