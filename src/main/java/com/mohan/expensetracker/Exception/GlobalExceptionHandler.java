@@ -3,6 +3,7 @@ package com.mohan.expensetracker.Exception;
 import com.mohan.expensetracker.dto.response.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -24,13 +25,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
     @ExceptionHandler(IdNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleIdNotFoundException(IdNotFoundException ex,WebRequest wb){
+    public ResponseEntity<ErrorResponse> handleIdNotFoundException(IdNotFoundException ex,WebRequest webRequest){
         ErrorResponse errorResponse = new ErrorResponse(
                 HttpStatus.NOT_FOUND,
                 ex.getMessage(),
-                wb.getDescription(false),
+                webRequest.getDescription(false),
                 "IdNotFoundException"
         );
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+    }
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex,WebRequest webRequest){
+        ErrorResponse errorResponse=new ErrorResponse(
+                HttpStatus.BAD_REQUEST,
+                ex.getMessage(),
+                webRequest.getDescription(false),
+                "MethodArgumentNotValidException"
+        );
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
     }
 }

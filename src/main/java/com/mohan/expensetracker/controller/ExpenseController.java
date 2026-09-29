@@ -5,6 +5,8 @@ import com.mohan.expensetracker.dto.request.EditExpenseReq;
 import com.mohan.expensetracker.dto.response.ExpenseResponse;
 import com.mohan.expensetracker.entity.Expenses;
 import com.mohan.expensetracker.service.ExpenseService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,31 +20,33 @@ public class ExpenseController {
     public ExpenseController(ExpenseService expenseService) {
         this.expenseService = expenseService;
     }
+
     @PostMapping("/add")
-    public ResponseEntity<Expenses> addExpense(@RequestBody AddExpenseReq addExpenseReq){
-        Optional<Expenses> result = expenseService.addExpense(addExpenseReq);
-        return ResponseEntity.ok(result.orElse(null));
+    public ResponseEntity<Expenses> addExpense(@Valid @RequestBody AddExpenseReq addExpenseReq){
+        Expenses result = expenseService.addExpense(addExpenseReq);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Expenses> getExpense(@PathVariable  Long id) throws Exception {
-        Optional<Expenses> result = expenseService.getExpense(id);
-        return ResponseEntity.ok(result.get());
+    public ResponseEntity<Expenses> getExpense(@PathVariable  Long id){
+        Expenses result = expenseService.getExpense(id);
+        return ResponseEntity.status(HttpStatus.FOUND).body(result);
     }
+
     @GetMapping("/")
-    public ResponseEntity<List<Expenses>> getAllExpense() throws Exception {
+    public ResponseEntity<List<Expenses>> getAllExpense() {
         List<Expenses> result = expenseService.getAllExpense();
-        return ResponseEntity.ok(result);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
 
     @PostMapping("/edit")
-    public ResponseEntity<Expenses> editExpense(@RequestBody EditExpenseReq editExpenseReq) throws Exception {
-        Optional<Expenses> result = expenseService.editExpense(editExpenseReq);
-
-        return ResponseEntity.ok(result.get());
+    public ResponseEntity<Expenses> editExpense(@Valid @RequestBody EditExpenseReq editExpenseReq){
+        Expenses result = expenseService.editExpense(editExpenseReq);
+        return ResponseEntity.status(HttpStatus.OK).body(result);
     }
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteExpense(@PathVariable Long id) throws Exception {
+    public ResponseEntity<Void> deleteExpense(@PathVariable Long id){
         expenseService.deleteExpense(id);
-        return ResponseEntity.ok(null);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -19,6 +19,8 @@ public class Expenses {
     @Column(nullable = false)
     BigDecimal amount;
     String description;
-    String category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    Category category;
     LocalDateTime date;
 }
