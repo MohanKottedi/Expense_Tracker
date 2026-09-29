@@ -27,3 +27,216 @@ Add SummaryController
 - Function: getSummary()
 - Input: Date Range (optional)
 - Output: Total Expenses, Category-wise Breakdown
+
+
+# Expense Tracker — Development Roadmap
+
+## Phase 1 — Standalone CRUD Prototype
+
+**Days 1–5**
+
+**Goal:** Build a complete expense management API without users or authentication.
+
+| Day   | Tasks                                                                                                                                   |
+| ----- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| Day 1 | Create Spring Boot project, configure MySQL, create `Expense` entity, repository, service, and controller. Implement POST and GET APIs. |
+| Day 2 | Implement update and delete methods. Test all CRUD operations in Postman.                                                               |
+| Day 3 | Create `Category` entity. Establish the `Expense`–`Category` relationship. Implement category CRUD.                                     |
+| Day 4 | Create request/response DTOs and map between DTOs and entities.                                                                         |
+| Day 5 | Add input validation, custom exceptions, and global exception handling. Test success and failure cases.                                 |
+
+**Deliverable:** A working standalone Expense Tracker API.
+
+---
+
+## Phase 2 — Advanced Expense Management
+
+**Days 6–10**
+
+**Goal:** Add powerful expense retrieval and reporting features.
+
+| Day    | Tasks                                                                                  |
+| ------ | -------------------------------------------------------------------------------------- |
+| Day 6  | Filter expenses by category, date range, minimum amount, and maximum amount.           |
+| Day 7  | Implement dynamic sorting by amount, date, and title.                                  |
+| Day 8  | Add pagination using `Pageable` and `Page`. Combine pagination with filters.           |
+| Day 9  | Create summary APIs for total spending, count, average, minimum, and maximum expenses. |
+| Day 10 | Create category-wise and monthly spending reports using SQL aggregation.               |
+
+**Deliverable:** A standalone API with advanced search and analytics.
+
+---
+
+## Phase 3 — Users and Data Ownership
+
+**Days 11–13**
+
+**Goal:** Convert the standalone application into a multi-user application.
+
+| Day    | Tasks                                                                                                       |
+| ------ | ----------------------------------------------------------------------------------------------------------- |
+| Day 11 | Create `User` entity and `UserRepository`. Define user fields and email uniqueness.                         |
+| Day 12 | Create user registration service and controller. Add password hashing with BCrypt.                          |
+| Day 13 | Connect `User` to `Expense`. Associate expenses with users and update queries to retrieve expenses by user. |
+
+### Additional Tasks
+
+* Define the `User → Expense` one-to-many relationship.
+* Add a `user_id` foreign key to the expense table.
+* Ensure expense creation associates the correct user.
+* Update filtering and analytics to support user-specific data.
+* Decide how to handle existing standalone expenses when migrating to users.
+
+**Deliverable:** Multiple users can own separate expense records. Until authentication is implemented, user identification is only a development mechanism, not a secure access-control mechanism.
+
+---
+
+## Phase 4 — Authentication and Security
+
+**Days 14–17**
+
+**Goal:** Secure the API using Spring Security and JWT.
+
+| Day    | Tasks                                                                                    |
+| ------ | ---------------------------------------------------------------------------------------- |
+| Day 14 | Add Spring Security dependencies and configure the security filter chain.                |
+| Day 15 | Implement login, authentication, and JWT generation.                                     |
+| Day 16 | Implement JWT validation and the authentication filter. Configure stateless sessions.    |
+| Day 17 | Secure endpoints and enforce ownership checks. Test unauthorized and forbidden requests. |
+
+### Detailed Tasks
+
+* Configure `SecurityFilterChain`.
+* Implement `UserDetailsService`.
+* Configure `PasswordEncoder` using BCrypt.
+* Create `JwtService`.
+* Create JWT authentication filter.
+* Configure public registration and login endpoints.
+* Protect expense and category endpoints as appropriate.
+* Retrieve the authenticated user from the security context.
+* Prevent users from reading, modifying, or deleting another user's expenses.
+* Return appropriate `401 Unauthorized` and `403 Forbidden` responses.
+
+**Deliverable:** A multi-user Expense Tracker with JWT-based authentication and authorization.
+
+---
+
+## Phase 5 — Production-Ready API Improvements
+
+**Days 18–21**
+
+**Goal:** Improve consistency, maintainability, and operational behavior.
+
+| Day    | Tasks                                                                   |
+| ------ | ----------------------------------------------------------------------- |
+| Day 18 | Refine DTOs, mapping, and API response structures.                      |
+| Day 19 | Complete validation rules and standardize exception responses.          |
+| Day 20 | Add logging, configuration profiles, and transaction management.        |
+| Day 21 | Add database migrations, indexes, and API versioning where appropriate. |
+
+### Detailed Tasks
+
+* Use a consistent error response containing timestamp, status, message, and path.
+* Handle malformed JSON and invalid query parameters.
+* Add `@Transactional` where multiple database operations must succeed together.
+* Configure development and production profiles.
+* Move secrets and database credentials into environment variables.
+* Use Flyway for database schema migrations.
+* Add indexes for frequently queried fields, such as expense date and user ID.
+* Review API status codes and naming conventions.
+
+**Deliverable:** A maintainable backend with predictable API behavior and environment-specific configuration.
+
+---
+
+## Phase 6 — Testing
+
+**Days 22–24**
+
+**Goal:** Verify that the application works correctly and securely.
+
+| Day    | Tasks                                                                |
+| ------ | -------------------------------------------------------------------- |
+| Day 22 | Unit-test service classes using JUnit and Mockito.                   |
+| Day 23 | Integration-test repositories, controllers, and database operations. |
+| Day 24 | Test authentication, authorization, validation, and error scenarios. |
+
+### Test Cases to Cover
+
+* Expense creation, update, retrieval, and deletion.
+* Expense not found.
+* Invalid amount, missing title, and invalid dates.
+* Empty results and invalid pagination parameters.
+* Date-range and category filtering.
+* Correct analytics calculations.
+* Duplicate email registration.
+* Invalid or expired JWT.
+* Access to another user's expense.
+* Database transaction rollback where applicable.
+
+**Deliverable:** A tested application with repeatable automated tests.
+
+---
+
+## Phase 7 — Documentation and Deployment
+
+**Days 25–28**
+
+**Goal:** Make the project easy to understand, run, and demonstrate.
+
+| Day    | Tasks                                                                                               |
+| ------ | --------------------------------------------------------------------------------------------------- |
+| Day 25 | Add Swagger/OpenAPI documentation and document endpoints.                                           |
+| Day 26 | Create Dockerfile and Docker Compose configuration for the app and MySQL.                           |
+| Day 27 | Configure production environment variables and deploy the backend.                                  |
+| Day 28 | Perform final Postman regression testing, prepare the README, add screenshots, and clean up GitHub. |
+
+### Detailed Tasks
+
+* Document request and response examples.
+* Document authentication requirements.
+* Provide setup instructions and database configuration.
+* Add an `.env.example` file without real secrets.
+* Configure Docker networking and persistent database storage.
+* Deploy to a hosting provider.
+* Verify the deployed APIs using Postman.
+* Add an architecture diagram and database ER diagram to the README.
+
+**Deliverable:** A documented, containerized, deployed backend.
+
+---
+
+## Phase 8 — Optional Advanced Features
+
+**After Day 28**
+
+**Goal:** Extend the application with additional personal finance features.
+
+| Feature                 | Tasks                                                               |
+| ----------------------- | ------------------------------------------------------------------- |
+| Budget Management       | Monthly budgets, category limits, and overspending alerts.          |
+| Recurring Expenses      | Daily, weekly, or monthly recurring expense rules.                  |
+| Export Reports          | Export expenses to CSV or PDF.                                      |
+| Notifications           | Notify users when budgets are exceeded.                             |
+| Receipt Uploads         | Upload and store expense receipts.                                  |
+| Caching                 | Cache frequently requested summaries using Redis.                   |
+| Asynchronous Processing | Use Kafka for asynchronous notifications or analytics if justified. |
+| Frontend                | Build a React dashboard with charts and expense forms.              |
+
+**Deliverable:** A richer personal finance application.
+
+---
+
+## Recommended Development Order
+
+1. Complete the standalone CRUD prototype.
+2. Add filtering, sorting, pagination, and analytics.
+3. Introduce users and data ownership.
+4. Implement Spring Security and JWT.
+5. Improve API consistency and production readiness.
+6. Add automated tests.
+7. Document, containerize, and deploy the application.
+8. Add optional advanced features.
+
+**Development principle:** Complete, test, and commit each phase before moving to the next. Keep the application functional throughout development.
+
