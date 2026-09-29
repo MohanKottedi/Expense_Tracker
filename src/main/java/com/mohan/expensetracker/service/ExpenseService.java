@@ -1,5 +1,7 @@
 package com.mohan.expensetracker.service;
 
+import com.mohan.expensetracker.Exception.IdNotFoundException;
+import com.mohan.expensetracker.Exception.InvalidAmountException;
 import com.mohan.expensetracker.dto.request.AddExpenseReq;
 import com.mohan.expensetracker.dto.request.EditExpenseReq;
 import com.mohan.expensetracker.dto.response.ExpenseResponse;
@@ -7,6 +9,7 @@ import com.mohan.expensetracker.entity.Expenses;
 import com.mohan.expensetracker.repository.ExpenseRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +22,7 @@ public class ExpenseService {
     }
     public Optional<Expenses> addExpense(AddExpenseReq addExpenseReq) {
         Expenses expenses=new Expenses();
+        if(addExpenseReq.getAmount().compareTo(BigDecimal.ZERO) < 0) throw new InvalidAmountException("Invalid amount. Negative amount is not allowed");
         expenses.setAmount(addExpenseReq.getAmount());
 
         if(addExpenseReq.getCategory()==null)
@@ -39,9 +43,9 @@ public class ExpenseService {
         expenses=expenseRepository.save(expenses);
         return Optional.of(expenses);
     }
-    public Optional<Expenses> editExpense(EditExpenseReq editExpenseReq) throws Exception {
-        Expenses expenses = expenseRepository.findById(editExpenseReq.getId()).orElseThrow();
-        if(editExpenseReq.getAmount() == null) throw new Exception("Invalid amount");
+    public Optional<Expenses> editExpense(EditExpenseReq editExpenseReq){
+        Expenses expenses = expenseRepository.findById(editExpenseReq.getId()).orElseThrow(() -> new IdNotFoundException("Id not found"));
+        if(editExpenseReq.getAmount().compareTo(BigDecimal.ZERO) < 0) throw new InvalidAmountException("Invalid amount. Amount cannot be null");
         expenses.setAmount(editExpenseReq.getAmount());
 
         expenses.setDescription(editExpenseReq.getDescription());
@@ -50,12 +54,12 @@ public class ExpenseService {
         expenseRepository.save(expenses);
         return Optional.of(expenses);
     }
-    public Optional<Expenses> getExpense(Long id) throws Exception{
-        Expenses expenses = expenseRepository.findById(id).orElseThrow();
+    public Optional<Expenses> getExpense(Long id){
+        Expenses expenses = expenseRepository.findById(id).orElseThrow(() -> new IdNotFoundException("Id not found"));
         return Optional.of(expenses);
     }
-    public void deleteExpense(Long id) throws Exception{
-        if(!expenseRepository.existsById(id)) throw new Exception("Invalid Id");
+    public void deleteExpense(Long id) {
+        if(!expenseRepository.existsById(id)) throw new IdNotFoundException("Id not found");
         expenseRepository.deleteById(id);
     }
     public List<Expenses> getAllExpense(){
